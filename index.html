@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>영수증 인증 이벤트</title>
+    <title>굿윌스토어 나들이대전 영수증 인증 이벤트</title>
     
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" />
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
@@ -11,48 +11,75 @@
     <style>
         body { font-family: 'Pretendard', sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; display: flex; justify-content: center; }
         .container { background-color: white; padding: 30px 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); width: 100%; max-width: 400px; box-sizing: border-box; }
+        .logo-img { max-width: 100%; height: auto; display: block; margin: 0 auto 20px auto; }
         h2 { text-align: center; color: #222; margin-top: 0; margin-bottom: 25px; font-size: 22px; }
         label.title { font-weight: 600; display: block; margin-bottom: 8px; color: #444; font-size: 14px; }
         input[type="text"], input[type="file"] { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-family: inherit; font-size: 15px; }
         input[type="text"]:focus { border-color: #0056b3; outline: none; }
-        .warning-text { font-size: 13px; color: #d32f2f; background-color: #ffebee; padding: 10px; border-radius: 6px; margin-bottom: 10px; line-height: 1.4; }
+        
+        .warning-text { font-size: 13px; color: #d32f2f; background-color: #ffebee; padding: 10px; border-radius: 6px; margin-bottom: 10px; line-height: 1.5; }
         .privacy-box { border: 1px solid #ddd; padding: 12px; font-size: 12px; margin-bottom: 12px; background-color: #fcfcfc; border-radius: 6px; color: #666; line-height: 1.5; }
-        .checkbox-label { display: flex; align-items: center; font-size: 14px; color: #222; font-weight: 500; margin-bottom: 25px; cursor: pointer; }
+        
+        .checkbox-label { display: flex; align-items: center; font-size: 14px; color: #222; font-weight: 500; margin-bottom: 15px; cursor: pointer; }
         .checkbox-label input { margin-right: 8px; width: 16px; height: 16px; }
-        button { width: 100%; padding: 15px; background-color: #0056b3; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; font-family: inherit; }
-        button:hover { background-color: #004494; }
-        button:disabled { background-color: #b0c4de; cursor: not-allowed; }
+        
+        /* 새로 추가된 주의사항 텍스트 스타일 */
+        .notice-text { font-size: 13px; color: #666; margin-bottom: 15px; line-height: 1.4; word-break: keep-all; }
+        
+        /* 새로 추가된 매장 안내 링크 버튼 스타일 */
+        .store-link-btn { display: block; text-align: center; padding: 12px; background-color: #f8f9fa; color: #333; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 600; margin-bottom: 25px; border: 1px solid #ddd; transition: 0.2s; }
+        .store-link-btn:hover { background-color: #e9ecef; }
+        
+        button[type="submit"] { width: 100%; padding: 15px; background-color: #0056b3; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; font-family: inherit; }
+        button[type="submit"]:hover { background-color: #004494; }
+        button[type="submit"]:disabled { background-color: #b0c4de; cursor: not-allowed; }
+        
         .g-recaptcha { display: flex; justify-content: center; margin-bottom: 20px; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>🧾 영수증 인증 이벤트</h2>
+        <!-- ★ 상단 로고 이미지 (logo.png 등 파일명으로 변경) -->
+        <img src="logo.png" alt="이벤트 로고" class="logo-img">
+        
+        <h2>🍂나들이대전 영수증 인증 이벤트🧾</h2>
         <form id="uploadForm">
             <label class="title">이름</label>
-            <input type="text" id="name" placeholder="홍길동" required>
+            <input type="text" id="name" placeholder="김굿윌" required>
             
             <label class="title">연락처</label>
-            <input type="text" id="phone" placeholder="010-1234-5678" required>
+            <input type="text" id="phone" placeholder="01015330091" maxlength="11" required>
+            
+            <label class="title">매장명</label>
+            <input type="text" id="storeName" placeholder="예: 강남점" required>
             
             <label class="title">영수증 사진 첨부</label>
+            <!-- 경고 문구 추가됨 -->
             <div class="warning-text">
-                ※ 카드번호, 승인번호 등 민감정보는 반드시 펜으로 지우거나 가린 후 업로드해주세요.
+                ※ 카드번호, 승인번호 등 민감정보는 반드시 펜으로 지우거나 가린 후 업로드해주세요.<br>
+                ※ 흔들림 등의 이유로 영수증 사진 확인이 어려울 경우, 참여가 제한될 수 있습니다.
             </div>
             <input type="file" id="receiptFile" accept="image/*" required>
 
             <div class="privacy-box">
                 <strong>[개인정보 수집 및 이용 동의]</strong><br>
                 1. 수집 목적: 매장 이용 인증 및 이벤트 혜택 지급<br>
-                2. 수집 항목: 이름, 연락처, 영수증 내역(결제일시, 금액, 매장명 등)<br>
+                2. 수집 항목: 이름, 연락처, 매장명, 영수증 내역<br>
                 3. 보유 및 이용 기간: <strong>이벤트 종료 및 혜택 지급 완료 후 1개월 내 파기</strong><br>
                 ※ 동의를 거부할 권리가 있으나, 거부 시 이벤트 참여가 불가합니다.
             </div>
             
             <label class="checkbox-label">
-                <input type="checkbox" id="privacyAgree" required> 
-                (필수) 위 개인정보 수집 및 이용에 동의합니다.
+                <input type="checkbox" id="privacyAgree" required> (필수) 위 개인정보 수집 및 이용에 동의합니다.
             </label>
+
+            <!-- 주의사항 추가됨 -->
+            <div class="notice-text">
+                *본 이벤트는 밀알복지재단 굿윌스토어에서만 진행됩니다.
+            </div>
+
+            <!-- 매장 안내 페이지 링크 버튼 추가됨 -->
+            <a href="https://goodwillstore.org/store/store.php" target="_blank" class="store-link-btn">굿윌스토어 매장 안내</a>
 
             <!-- ★ 리캡차 사이트 키 붙여넣기 -->
             <div class="g-recaptcha" data-sitekey="6LenMOMtAAAAAD247nQFdAkCQg2u3j3wt7diLZ4A"></div>
@@ -62,6 +89,18 @@
     </div>
 
     <script>
+        const textOnlyRegex = /[^a-zA-Z가-힣ㄱ-ㅎㅏ-ㅣ\s]/g;
+        document.getElementById('name').addEventListener('input', function() {
+            this.value = this.value.replace(textOnlyRegex, '');
+        });
+        document.getElementById('storeName').addEventListener('input', function() {
+            this.value = this.value.replace(textOnlyRegex, '');
+        });
+
+        document.getElementById('phone').addEventListener('input', function() {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+
         const form = document.getElementById('uploadForm');
         
         // ★ 구글 앱스 스크립트 웹 앱 URL 붙여넣기
@@ -76,6 +115,12 @@
                 return;
             }
 
+            const phoneVal = document.getElementById('phone').value;
+            if (phoneVal.length !== 11) {
+                alert("연락처는 정확히 11자리 숫자로 입력해주세요.");
+                return;
+            }
+
             const fileInput = document.getElementById('receiptFile').files[0];
             if (!fileInput) return alert("파일을 선택해주세요.");
 
@@ -85,26 +130,18 @@
 
             const reader = new FileReader();
             reader.onload = function(event) {
-                // 5번: 이미지 압축을 위한 Canvas 처리
                 const img = new Image();
                 img.onload = function() {
                     const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 800; // 최대 너비
-                    const MAX_HEIGHT = 800; // 최대 높이
+                    const MAX_WIDTH = 800; 
+                    const MAX_HEIGHT = 800; 
                     let width = img.width;
                     let height = img.height;
 
-                    // 비율 유지하며 크기 줄이기
                     if (width > height) {
-                        if (width > MAX_WIDTH) {
-                            height *= MAX_WIDTH / width;
-                            width = MAX_WIDTH;
-                        }
+                        if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
                     } else {
-                        if (height > MAX_HEIGHT) {
-                            width *= MAX_HEIGHT / height;
-                            height = MAX_HEIGHT;
-                        }
+                        if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
                     }
                     canvas.width = width;
                     canvas.height = height;
@@ -112,41 +149,31 @@
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, width, height);
 
-                    // 이미지를 JPEG로 변환하고 화질을 70%(0.7)로 압축
                     const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
 
                     const payload = {
                         name: document.getElementById('name').value,
                         phone: document.getElementById('phone').value,
+                        storeName: document.getElementById('storeName').value,
                         fileName: "compressed_" + fileInput.name.split('.')[0] + ".jpg",
                         mimeType: 'image/jpeg',
                         fileData: compressedDataUrl
                     };
 
-                    // 압축된 데이터 전송
-                    fetch(gasUrl, {
-                        method: 'POST',
-                        body: JSON.stringify(payload)
-                    })
+                    fetch(gasUrl, { method: 'POST', body: JSON.stringify(payload) })
                     .then(response => response.json())
                     .then(data => {
                         if(data.result === 'success') {
                             alert("성공적으로 제출되었습니다! 참여해 주셔서 감사합니다.");
                             form.reset();
                             grecaptcha.reset(); 
-                        } else {
-                            alert("오류가 발생했습니다: " + data.message);
-                        }
+                        } else { alert("오류가 발생했습니다: " + data.message); }
                     })
                     .catch(error => alert("전송 실패: " + error))
-                    .finally(() => {
-                        submitBtn.innerText = "제출하기";
-                        submitBtn.disabled = false;
-                    });
+                    .finally(() => { submitBtn.innerText = "제출하기"; submitBtn.disabled = false; });
                 }
                 img.src = event.target.result;
             };
-            
             reader.readAsDataURL(fileInput); 
         });
     </script>
