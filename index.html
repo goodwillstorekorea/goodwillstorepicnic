@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>영수증 인증 이벤트</title>
+</head>
+<body>
+    <h2>영수증 인증 이벤트 참여</h2>
+    <form id="uploadForm">
+        <label>이름: <input type="text" id="name" required></label><br><br>
+        <label>연락처: <input type="text" id="phone" required></label><br><br>
+        
+        <p>※ 카드번호, 승인번호 등 민감정보는 반드시 가린 후 업로드해주세요.</p>
+        <input type="file" id="receiptFile" accept="image/*" required><br><br>
+
+        <!-- 개인정보 동의 UI (필수 체크) -->
+        <label>
+            <input type="checkbox" id="privacyAgree" required> 
+            (필수) 개인정보 수집 및 이용에 동의합니다. (이벤트 종료 후 즉시 파기)
+        </label><br><br>
+
+        <button type="submit">제출하기</button>
+    </form>
+
+    <script>
+        const form = document.getElementById('uploadForm');
+        // 위에서 복사한 구글 웹 앱 URL을 여기에 붙여넣습니다.
+        const gasUrl = '여기에_웹_앱_URL_붙여넣기'; 
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const fileInput = document.getElementById('receiptFile').files[0];
+            if (!fileInput) return alert("파일을 선택해주세요.");
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const payload = {
+                    name: document.getElementById('name').value,
+                    phone: document.getElementById('phone').value,
+                    fileName: fileInput.name,
+                    mimeType: fileInput.type,
+                    fileData: event.target.result // Base64 문자열
+                };
+
+                // 구글 앱스 스크립트로 데이터 전송
+                fetch(gasUrl, {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if(data.result === 'success') {
+                        alert("성공적으로 제출되었습니다!");
+                        form.reset();
+                    } else {
+                        alert("오류가 발생했습니다: " + data.message);
+                    }
+                })
+                .catch(error => alert("전송 실패: " + error));
+            };
+            
+            // 파일을 Base64로 읽기 시작
+            reader.readAsDataURL(fileInput); 
+        });
+    </script>
+</body>
+</html>
