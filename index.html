@@ -40,9 +40,9 @@
 <body>
     <div class="container">
         <!-- ★ 상단 로고 이미지 (logo.png 등 파일명으로 변경) -->
-        <img src="logo.png" alt="이벤트 로고" class="logo-img">
+        <img src="logo.png.png" alt="이벤트 로고" class="logo-img">
         
-        <h2>🍂나들이대전 영수증 인증 이벤트🧾</h2>
+        <h2>🍂 나들이대전 영수증 인증 이벤트 🧾</h2>
         <form id="uploadForm">
             <label class="title">이름</label>
             <input type="text" id="name" placeholder="김굿윌" required>
@@ -51,7 +51,15 @@
             <input type="text" id="phone" placeholder="01015330091" maxlength="11" required>
             
             <label class="title">매장명</label>
-            <input type="text" id="storeName" placeholder="예: 강남점" required>
+            <input type="text" id="storeName" placeholder="예: 밀알인천검단점" required>
+
+            <!-- 주의사항 추가됨 -->
+            <div class="notice-text">
+                *본 이벤트는 밀알복지재단 굿윌스토어에서만 진행됩니다.
+            </div>
+
+            <!-- 매장 안내 페이지 링크 버튼 추가됨 -->
+            <a href="https://goodwillstore.org/store/store.php" target="_blank" class="store-link-btn">굿윌스토어 매장 안내 바로가기</a>
             
             <label class="title">영수증 사진 첨부</label>
             <!-- 경고 문구 추가됨 -->
@@ -72,14 +80,6 @@
             <label class="checkbox-label">
                 <input type="checkbox" id="privacyAgree" required> (필수) 위 개인정보 수집 및 이용에 동의합니다.
             </label>
-
-            <!-- 주의사항 추가됨 -->
-            <div class="notice-text">
-                *본 이벤트는 밀알복지재단 굿윌스토어에서만 진행됩니다.
-            </div>
-
-            <!-- 매장 안내 페이지 링크 버튼 추가됨 -->
-            <a href="https://goodwillstore.org/store/store.php" target="_blank" class="store-link-btn">굿윌스토어 매장 안내</a>
 
             <!-- ★ 리캡차 사이트 키 붙여넣기 -->
             <div class="g-recaptcha" data-sitekey="6LenMOMtAAAAAD247nQFdAkCQg2u3j3wt7diLZ4A"></div>
