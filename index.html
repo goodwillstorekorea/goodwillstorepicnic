@@ -2,61 +2,196 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <!-- 모바일 기기 화면 비율에 맞추는 필수 설정 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>영수증 인증 이벤트</title>
-    <!-- 3번: 구글 reCAPTCHA 스크립트 로드 -->
+    
+    <!-- 깔끔한 무료 웹 폰트 (Pretendard) 불러오기 -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" />
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+    <style>
+        /* 전체 배경 및 폰트 설정 */
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background-color: #f4f7f6; /* 연한 회색 배경 */
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        
+        /* 메인 콘텐츠를 담는 하얀색 박스 */
+        .container {
+            background-color: white;
+            padding: 30px 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            width: 100%;
+            max-width: 400px; /* PC에서도 폰 화면처럼 보이게 너비 제한 */
+            box-sizing: border-box;
+        }
+
+        h2 {
+            text-align: center;
+            color: #222;
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-size: 22px;
+        }
+
+        /* 입력 폼 스타일 */
+        label.title {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 8px;
+            color: #444;
+            font-size: 14px;
+        }
+
+        input[type="text"], input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-family: inherit;
+            font-size: 15px;
+        }
+
+        input[type="text"]:focus {
+            border-color: #0056b3; /* 클릭 시 파란색 테두리 */
+            outline: none;
+        }
+
+        /* 경고 및 안내 문구 */
+        .warning-text {
+            font-size: 13px;
+            color: #d32f2f;
+            background-color: #ffebee;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        /* 개인정보 동의 박스 */
+        .privacy-box {
+            border: 1px solid #ddd;
+            padding: 12px;
+            font-size: 12px;
+            margin-bottom: 12px;
+            background-color: #fcfcfc;
+            border-radius: 6px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: #222;
+            font-weight: 500;
+            margin-bottom: 25px;
+            cursor: pointer;
+        }
+
+        .checkbox-label input {
+            margin-right: 8px;
+            width: 16px;
+            height: 16px;
+        }
+
+        /* 제출 버튼 */
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: #0056b3; /* 메인 브랜드 컬러 (원하는 색으로 변경 가능) */
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: inherit;
+        }
+
+        button:hover {
+            background-color: #004494;
+        }
+
+        button:disabled {
+            background-color: #b0c4de;
+            cursor: not-allowed;
+        }
+
+        /* 리캡차 중앙 정렬 */
+        .g-recaptcha {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
-    <h2>영수증 인증 이벤트 참여</h2>
-    <form id="uploadForm">
-        <label>이름: <input type="text" id="name" required></label><br><br>
-        <label>연락처: <input type="text" id="phone" required></label><br><br>
-        
-        <p>※ 카드번호, 승인번호 등 민감정보는 반드시 가린 후 업로드해주세요.</p>
-        <input type="file" id="receiptFile" accept="image/*" required><br><br>
+    <div class="container">
+        <h2>🧾 영수증 인증 이벤트</h2>
+        <form id="uploadForm">
+            <label class="title">이름</label>
+            <input type="text" id="name" placeholder="김굿윌" required>
+            
+            <label class="title">연락처</label>
+            <input type="text" id="phone" placeholder="010-1533-0091" required>
+            
+            <label class="title">영수증 사진 첨부</label>
+            <div class="warning-text">
+                ※ 카드번호, 승인번호 등 민감정보는 반드시 펜으로 지우거나 가린 후 업로드해주세요.
+            </div>
+            <input type="file" id="receiptFile" accept="image/*" required>
 
-        <!-- 4번: 개인정보 수집 및 이용 안내문 상자 추가 -->
-        <div style="border: 1px solid #ccc; padding: 10px; font-size: 13px; margin-bottom: 10px; background-color: #f9f9f9;">
-            <strong>[개인정보 수집 및 이용 동의]</strong><br>
-            1. 수집 목적: 매장 이용 인증 및 이벤트 혜택 지급<br>
-            2. 수집 항목: 이름, 연락처, 영수증 내역(결제일시, 금액, 매장명 등)<br>
-            3. 보유 및 이용 기간: <strong>이벤트 종료 및 혜택 지급 완료 후 1개월 내 파기</strong><br>
-            ※ 동의를 거부할 권리가 있으나, 거부 시 이벤트 참여가 불가합니다.
-        </div>
-        <label>
-            <input type="checkbox" id="privacyAgree" required> 
-            (필수) 위 개인정보 수집 및 이용 내용에 동의합니다.
-        </label><br><br>
+            <div class="privacy-box">
+                <strong>[개인정보 수집 및 이용 동의]</strong><br>
+                1. 수집 목적: 매장 이용 인증 및 이벤트 혜택 지급<br>
+                2. 수집 항목: 이름, 연락처, 영수증 내역(결제일시, 금액, 매장명 등)<br>
+                3. 보유 및 이용 기간: <strong>이벤트 종료 및 혜택 지급 완료 후 1개월 내 파기</strong><br>
+                ※ 동의를 거부할 권리가 있으나, 거부 시 이벤트 참여가 불가합니다.
+            </div>
+            
+            <label class="checkbox-label">
+                <input type="checkbox" id="privacyAgree" required> 
+                (필수) 위 개인정보 수집 및 이용에 동의합니다.
+            </label>
 
-        <!-- 3번: reCAPTCHA 위젯이 표시될 자리 -->
-        <!-- 아래 data-sitekey 따옴표 안에 발급받은 '사이트 키'를 넣으세요! -->
-        <div class="g-recaptcha" data-sitekey="6LenMOMtAAAAAD247nQFdAkCQg2u3j3wt7diLZ4A"></div><br>
+            <!-- ★ 여기에 발급받은 '사이트 키' 붙여넣기 -->
+            <div class="g-recaptcha" data-sitekey="6LenMOMtAAAAAD247nQFdAkCQg2u3j3wt7diLZ4A"></div>
 
-        <button type="submit">제출하기</button>
-    </form>
+            <button type="submit">제출하기</button>
+        </form>
+    </div>
 
     <script>
         const form = document.getElementById('uploadForm');
         
-        // ★ 주의: 이전에 복사해둔 구글 앱스 스크립트 웹 앱 URL(exec로 끝나는 주소)을 다시 넣어주세요!
+        // ★ 여기에 이전에 만든 웹 앱 URL(exec로 끝나는 주소) 붙여넣기
         const gasUrl = 'https://script.google.com/macros/s/AKfycbw3ZpxHX9MY2yUImujARDApaDdzx8JHnxwMdqxplBsIG9STqdv1SouP8fH-kqECzn4m3g/exec'; 
 
         form.addEventListener('submit', function(e) {
             e.preventDefault();
             
-            // 3번: 봇 방지 (reCAPTCHA 체크 여부 확인)
             const recaptchaResponse = grecaptcha.getResponse();
             if (recaptchaResponse.length === 0) {
                 alert("자동가입 방지를 위해 '로봇이 아닙니다'를 체크해주세요.");
-                return; // 제출 중단
+                return;
             }
 
             const fileInput = document.getElementById('receiptFile').files[0];
             if (!fileInput) return alert("파일을 선택해주세요.");
 
-            // 제출 중일 때 버튼 텍스트 변경
             const submitBtn = document.querySelector('button[type="submit"]');
-            submitBtn.innerText = "제출 중...";
+            submitBtn.innerText = "제출 중... 잠시만 기다려주세요";
             submitBtn.disabled = true;
 
             const reader = new FileReader();
@@ -76,16 +211,15 @@
                 .then(response => response.json())
                 .then(data => {
                     if(data.result === 'success') {
-                        alert("성공적으로 제출되었습니다!");
+                        alert("성공적으로 제출되었습니다! 참여해 주셔서 감사합니다.");
                         form.reset();
-                        grecaptcha.reset(); // 성공 시 리캡차 초기화
+                        grecaptcha.reset(); 
                     } else {
                         alert("오류가 발생했습니다: " + data.message);
                     }
                 })
                 .catch(error => alert("전송 실패: " + error))
                 .finally(() => {
-                    // 성공/실패 상관없이 버튼 원상복구
                     submitBtn.innerText = "제출하기";
                     submitBtn.disabled = false;
                 });
